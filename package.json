@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "sls offline start --stage dev",
-    "deploy": "sls deploy -s dev",
-    "lint": "eslint src/**/*.ts"
+    "deploy": "sls deploy -s dev"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.89",
