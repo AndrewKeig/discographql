@@ -1,0 +1,95 @@
+service: discographql
+
+plugins:
+   - serverless-webpack
+   - serverless-appsync-plugin
+   - serverless-appsync-simulator
+   - serverless-offline
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-2
+  lambdaHashingVersion: 20201221
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - "dynamodb:PutItem"
+            - "dynamodb:UpdateItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:GetItem"
+            - "dynamodb:Scan"
+            - "dynamodb:Query"
+          Resource: '*'
+
+custom:
+  table: discographql-${self:provider.stage}
+  webpack:
+    includeModules: true
+  appsync-simulator:
+    dynamoDb:
+      endpoint: 'http://localhost:8000'
+    watch: false
+  serverless-offline:
+    port: 3005
+    httpPort: 9090
+  appSync:
+    name: discographql-${self:provider.stage}
+    authenticationType: API_KEY
+    schema:
+      - src/schema.graphql
+    xrayEnabled: true
+    mappingTemplates:
+      - type: Mutation
+        field: createRecording
+        dataSource: createRecordingFunction
+        request: false
+        response: false
+      - type: Query
+        field: getRecording
+        dataSource: getRecordingFunction
+        request: false
+        response: false
+    dataSources:
+      - type: AWS_LAMBDA
+        name: createRecordingFunction
+        config:
+          functionName: createRecording
+      - type: AWS_LAMBDA
+        name: getRecordingFunction
+        config:
+          functionName: getRecording
+functions:
+  createRecording:
+    handler: src/functions/createRecording.handler
+    environment:
+      DISCOGRAPHQL_TABLE_NAME: ${self:custom.table}
+  getRecording:
+    handler: src/functions/getRecording.handler
+    environment:
+      DISCOGRAPHQL_TABLE_NAME: ${self:custom.table}
+resources:
+  Resources:
+    Table:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.table}
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE

@@ -1,0 +1,47 @@
+{
+  "discographql-dev": [
+    {
+      "PutRequest": {
+        "Item": {
+          "PK": {
+            "S": "RECORDING"
+          },
+          "SK": {
+            "S": "RECORDING#49b119a9-0507-4b94-92ea-1a42d676658c"
+          },
+          "id": {
+            "S": "49b119a9-0507-4b94-92ea-1a42d676658c"
+          },
+          "data": {
+            "M": {
+              "name": {
+                "S": "A Love Supreme"
+              },
+              "description": {
+                "S": "A Love Supreme is an album by American jazz saxophonist John Coltrane. He recorded it in one session on December 9, 1964, at Van Gelder Studio in Englewood Cliffs, New Jersey, leading a quartet featuring pianist McCoy Tyner, bassist Jimmy Garrison, and drummer Elvin Jones."
+              },
+              "genre": {
+                "S": "Jazz"
+              },
+              "artist": {
+                "S": "John Coltrane"
+              },
+              "format": {
+                "S": "Albumn"
+              },
+              "year": {
+                "S": "1965"
+              },
+              "label": {
+                "S": "Impulse! Records"
+              },
+              "url": {
+                "S": "hhttps://www.youtube.com/watch?v=ll3CMgiUPuU"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

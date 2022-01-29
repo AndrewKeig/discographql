@@ -1,0 +1,43 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Recording {
+  id: String
+  name: String
+  description: String
+  genre: String
+  artist: String
+  format: String
+  year: String
+  label: String
+  url: String
+}
+
+type Response {
+  message: String!
+}
+
+input RecordingCreateRequest {
+  name: String
+  description: String
+  genre: String
+  artist: String
+  format: String
+  year: String
+  label: String
+  url: String
+}
+
+input RecordingGetRequest {
+  recordingId: String
+}
+
+type Query {
+  getRecording(input: RecordingGetRequest): Recording
+}
+
+type Mutation {
+  createRecording(input: RecordingCreateRequest): Response
+}
