@@ -41,7 +41,11 @@ custom:
     httpPort: 9090
   appSync:
     name: discographql-${self:provider.stage}
-    authenticationType: API_KEY
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    userPoolConfig:
+      awsRegion: eu-west-2
+      defaultAction: ALLOW
+      userPoolId:  { Ref: CognitoUserPool }
     schema:
       - src/schema.graphql
     xrayEnabled: true
@@ -93,3 +97,14 @@ resources:
             AttributeType: S
         StreamSpecification:
           StreamViewType: NEW_IMAGE
+    CognitoUserPool:
+      Type: "AWS::Cognito::UserPool"
+      Properties:
+        UsernameAttributes:
+          - "email"
+        UserPoolName: discographql-${self:provider.stage}
+    CognitoUserPoolClient:
+      Type: "AWS::Cognito::UserPoolClient"
+      Properties:
+        ClientName: "web"
+        UserPoolId: !Ref CognitoUserPool
